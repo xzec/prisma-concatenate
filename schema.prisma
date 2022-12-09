@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id                      String            @id @default(uuid())
+  email                   String            @unique
+  name                    String
+  kanbans                 Kanban[]
+  collaborativeKanbans    Kanban[]          @relation("Collaborations")
+}
+
+enum EIssueType {
+  TASK
+  BUG
+}
+
+enum EColumn {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum EPriority {
+  HIGHEST
+  HIGH
+  MEDIUM
+  LOW
+  LOWEST
+}
+
+model Kanban {
+  id                      String            @id @default(uuid())
+  shortId                 String            @unique
+  incrementalIssueId      Int               @default(1)
+  name                    String
+  issues                  Issue[]
+  collaborators           User[]            @relation("Collaborations")
+  owner                   User              @relation(fields: [ownerId], references: [id])
+  ownerId                 String
+}
+
+model Issue {
+  id                      String            @id @default(uuid())
+  shortId                 Int
+  issueType               EIssueType        @default(TASK)
+  priority                EPriority         @default(MEDIUM)
+  column                  EColumn           @default(TODO)
+  summary                 String
+  description             String
+  assigneeId              String?
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt @default(now())
+  kanban                  Kanban            @relation(fields: [kanbanId], references: [id])
+  kanbanId                String
+}
+

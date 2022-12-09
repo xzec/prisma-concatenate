@@ -1,0 +1,18 @@
+enum EIssueType {
+  TASK
+  BUG
+}
+
+enum EColumn {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum EPriority {
+  HIGHEST
+  HIGH
+  MEDIUM
+  LOW
+  LOWEST
+}

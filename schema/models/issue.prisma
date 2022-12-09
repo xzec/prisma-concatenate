@@ -1,0 +1,14 @@
+model Issue {
+  id                      String            @id @default(uuid())
+  shortId                 Int
+  issueType               EIssueType        @default(TASK)
+  priority                EPriority         @default(MEDIUM)
+  column                  EColumn           @default(TODO)
+  summary                 String
+  description             String
+  assigneeId              String?
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt @default(now())
+  kanban                  Kanban            @relation(fields: [kanbanId], references: [id])
+  kanbanId                String
+}
